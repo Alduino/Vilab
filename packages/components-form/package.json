@@ -1,0 +1,42 @@
+{
+  "name": "@xilab/components-form",
+  "version": "0.1.0",
+  "description": "Xilab form component library",
+  "keywords": [
+    "react",
+    "xilab",
+    "component",
+    "form"
+  ],
+  "dependencies": {
+    "@types/react": "^16.9.3",
+    "@types/styled-components": "^4.1.19",
+    "@types/classnames": "^2.2.9",
+    "styled-components": "^4.4.0",
+    "classnames": "^2.2.6",
+    "react": "^16.9.0",
+    "@xilab/themes": "^0.1.0",
+    "rimraf": "^3.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^3.6.3"
+  },
+  "author": "Zach Barham <git@alduino.dev>",
+  "homepage": "",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "directories": {
+    "lib": "lib",
+    "test": "__tests__"
+  },
+  "files": [
+    "lib"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "test": "echo \"Error: run tests from root\" && exit 1",
+    "build": "tsc"
+  }
+}

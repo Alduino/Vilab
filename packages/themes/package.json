@@ -1,0 +1,35 @@
+{
+  "name": "@xilab/themes",
+  "version": "0.1.0",
+  "description": "Xilab themes",
+  "keywords": [
+    "xilab",
+    "theme"
+  ],
+  "dependencies": {
+    "@types/react": "^16.9.3",
+    "react": "^16.9.0",
+    "rimraf": "^3.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^3.6.3"
+  },
+  "author": "Zach Barham <git@alduino.dev>",
+  "homepage": "",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "directories": {
+    "lib": "lib",
+    "test": "__tests__"
+  },
+  "files": [
+    "lib"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "test": "echo \"Error: run tests from root\" && exit 1",
+    "build": "tsc"
+  }
+}

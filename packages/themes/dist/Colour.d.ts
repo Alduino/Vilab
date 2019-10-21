@@ -1,0 +1,35 @@
+export default class Colour {
+    private static hueToRgb;
+    private static hslaToRgba;
+    private static rgbaToHsla;
+    static fromRGB(r: number, g?: number, b?: number, a?: number): Colour;
+    private readonly h;
+    private readonly s;
+    private readonly l;
+    private readonly a;
+    constructor(h: number, s: number, l: number, a?: number);
+    hex(): string;
+    rgb(): string;
+    hsl(): string;
+    toString(): string;
+    withHue(h: number): Colour;
+    addHue(h: number): Colour;
+    minusHue(h: number): Colour;
+    timesHue(h: number): Colour;
+    divideHue(h: number): Colour;
+    withSaturation(s: number): Colour;
+    addSaturation(s: number): Colour;
+    minusSaturation(s: number): Colour;
+    timesSaturation(s: number): Colour;
+    divideSaturation(s: number): Colour;
+    withLightness(l: number): Colour;
+    addLightness(l: number): Colour;
+    minusLightness(l: number): Colour;
+    timesLightness(l: number): Colour;
+    divideLightness(l: number): Colour;
+    withAlpha(a: number): Colour;
+    addAlpha(a: number): Colour;
+    minusAlpha(a: number): Colour;
+    timesAlpha(a: number): Colour;
+    divideAlpha(a: number): Colour;
+}
