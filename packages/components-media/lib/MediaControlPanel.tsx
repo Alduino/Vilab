@@ -4,6 +4,7 @@ import {StyledIconProps} from "styled-icons/StyledIconBase";
 import {Slider} from "@xilab/components-form";
 import {Pause, Play, Volume, VolumeFull, VolumeLow, VolumeMute} from "styled-icons/boxicons-regular";
 import classNames = require("classnames");
+import {Values} from "@xilab/themes";
 
 export interface MediaControlPanelProps {
     /**
@@ -61,6 +62,14 @@ const ControlButton = styled.button<StyledIconProps>`
     &:not(:last-child) {
         margin-right: .3em;
     }
+    
+    &:hover {
+        color: ${props => props.theme.colour.primary.withLightness(Values.dark)};
+    }
+    
+    &:active {
+        color: ${props => props.theme.colour.primary.withLightness(Values.xdark)};
+    }
 `;
 
 const VolumeSlider = styled(Slider)`
@@ -69,6 +78,14 @@ const VolumeSlider = styled(Slider)`
     
     position: relative;
     top: .3em;
+    
+    &:hover {
+        color: ${props => props.theme.colour.primary.withLightness(Values.dark)};
+    }
+    
+    &:active {
+        color: ${props => props.theme.colour.primary.withLightness(Values.xdark)};
+    }
 `;
 
 export const getRealVolume = (vol: number) => Math.max(0, vol);
