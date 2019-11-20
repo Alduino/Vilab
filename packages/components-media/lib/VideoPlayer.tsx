@@ -55,7 +55,7 @@ const Overlay = styled.div<VideoOverlayProps>`
     grid-template-columns: 1fr auto 1fr;
     
     &:hover ${Progress}, &:hover ${Controls} {
-    opacity: 1;
+        opacity: 1;
     }
 `;
 
