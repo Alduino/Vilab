@@ -108,6 +108,18 @@ const LoadSection = styled.div.attrs<DataLoadSection>(props => ({
     background: ${props => props.theme.shade.grey(Values.light)};
 `;
 
+/**
+ * Acts similarly to the form slider component, however is targeted towards media and includes support for displaying
+ * load sections.
+ *
+ * @remarks
+ * The seek bar is always `1em` high, so you can scale it however you want by setting its `font-size`. It is also a
+ * block element, so you can set its width normally. You can set the dot colour with the CSS `color` property, however
+ * the background and load section colours cannot be changed.
+ *
+ * This component does not store its own state, so you will need to listen to its events and update its properties
+ * (hooks are recommended) otherwise it will act as if it is readonly.
+ */
 export const SeekBar: FC<SeekBarProps> = props => {
     const [isMouseDown, setIsMouseDown] = useState(false);
 
