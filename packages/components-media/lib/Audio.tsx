@@ -15,12 +15,12 @@ import {addMediaListeners} from "./util";
  * <Audio ... time={time} onSeek={setTime}
  * ```
  *
- * Instead, you will need to use a different state for the real video time, if you want a progress bar for the video:
+ * Instead, you will need to use a different state for the real video time, if you want a progress bar for the audio:
  * ```jsx
  * const [time, setTime] = useState(0);
- * const [videoOverrideTime, setVideoOverrideTime] = useState(time);
- * <Video ... time={videoOverrideTime} onSeek={setTime} />
- * <SeekBar ... time={time} onSeek={val => { setTime(val); setVideoOverrideTime(val); }}
+ * const [audioOverrideTime, setVideoOverrideTime] = useState(time);
+ * <Audio ... time={audioOverrideTime} onSeek={setTime} />
+ * <SeekBar ... currentTime={time} onSeek={val => { setTime(val); setVideoOverrideTime(val); }}
  * ```
  */
 export const Audio: FC<PropsWithChildren<MediaProps>> = props => {

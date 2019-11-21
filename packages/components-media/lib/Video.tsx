@@ -20,7 +20,7 @@ import {addMediaListeners} from "./util";
  * const [time, setTime] = useState(0);
  * const [videoOverrideTime, setVideoOverrideTime] = useState(time);
  * <Video ... time={videoOverrideTime} onSeek={setTime} />
- * <SeekBar ... time={time} onSeek={val => { setTime(val); setVideoOverrideTime(val); }}
+ * <SeekBar ... currentTime={time} onSeek={val => { setTime(val); setVideoOverrideTime(val); }}
  * ```
  */
 export const Video: FC<PropsWithChildren<MediaProps>> = props => {
