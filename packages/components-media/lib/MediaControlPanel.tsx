@@ -104,6 +104,7 @@ export const MediaControlPanel: FC<MediaControlPanelProps> = props => {
     function togglePlayState() {
         if (props.playing) {
             if (props.onPause) props.onPause();
+        } else {
             if (props.onPlay) props.onPlay();
         }
     }
