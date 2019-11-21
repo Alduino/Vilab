@@ -1,7 +1,14 @@
 import {CancellableEventHandler, CancellableEventHandlerWithArgument} from "./util";
 
 export interface DataLoadSection {
+    /**
+     * The start time for this data load section. Between 0 and 1
+     */
     start: number;
+
+    /**
+     * The end time for this data load section. Between 0 and 1
+     */
     end: number;
 }
 
