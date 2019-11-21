@@ -12,11 +12,11 @@ export interface VideoPlayerProps {
     width: CssValue;
     height: CssValue;
 
-    onPlay?: CancellableEventHandler;
-    onPause?: CancellableEventHandler;
+    //onPlay?: CancellableEventHandler;
+    //onPause?: CancellableEventHandler;
 
-    onVolumeUpdate?: CancellableEventHandlerWithArgument<number>;
-    onSeek?: CancellableEventHandlerWithArgument<number>;
+    //onVolumeUpdate?: CancellableEventHandlerWithArgument<number>;
+    //onSeek?: CancellableEventHandlerWithArgument<number>;
 }
 
 interface VideoOverlayProps {
@@ -79,6 +79,9 @@ const PlayPauser = styled(PopupIcon)`
     font-size: 10em;
 `;
 
+/**
+ * All-in-one video player. Simply set and forget.
+ */
 export const VideoPlayer: FC<VideoPlayerProps> = props => {
     const [time, setTime] = useState(0), // TODO initial timestamp
         [videoOverrideTime, setVideoOverrideTime] = useState(time);
