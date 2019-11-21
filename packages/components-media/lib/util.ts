@@ -84,3 +84,10 @@ export function sizeToString(size: CssValue) {
     if (typeof size === "string") return size;
     return size + "px";
 }
+
+export function formatSecondsAsMS(seconds: number): string {
+    const displaySeconds = Math.round(seconds) % 60;
+    const paddedSeconds = displaySeconds.toString().padStart(2, "0");
+    const minutes = Math.floor(seconds / 60);
+    return `${minutes}:${paddedSeconds}`;
+}
