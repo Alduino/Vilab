@@ -119,7 +119,7 @@ export const Slider: FC<SliderProps> = props => {
         const clampedValue = Math.max(0, Math.min(1, smallValue));
         const scaledValue = props.min + clampedValue * (props.max - props.min);
 
-        if (props.onChange) props.onChange(scaledValue);
+        props.onChange(scaledValue);
     }
 
     // This needs to be in a separate function so we can remove it later
