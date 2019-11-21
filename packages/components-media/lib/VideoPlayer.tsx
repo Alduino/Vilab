@@ -85,6 +85,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = props => {
     const [loadTimes, setLoadTimes] = useState<DataLoadSection[]>([]);
     const [isPlaying, setIsPlaying] = useState(false); // TODO autoplay option
     const [volume, setVolume] = useState(1); // TODO store previous volume
+    const [duration, setDuration] = useState(0);
 
     return (
         <Overlay width={props.width} height={props.height}>
@@ -96,12 +97,16 @@ export const VideoPlayer: FC<VideoPlayerProps> = props => {
                          onPause={() => setIsPlaying(false)}
                          onEnd={() => setIsPlaying(false)}
                          onDataLoaded={setLoadTimes}
+                         onDurationLoaded={setDuration}
                          children={props.children} />
 
             <VideoHider onClick={() => setIsPlaying(state => !state)} />
 
             <PlayPauser icon={isPlaying ? Play : Pause} />
-            <Progress />
+            <Progress duration={duration}
+                      loadSections={loadTimes}
+                      currentTime={time}
+                      onSeek={setVideoOverrideTime}/>
             <Controls playing={isPlaying}
                       volume={volume}
                       onPlay={() => setIsPlaying(true)}
