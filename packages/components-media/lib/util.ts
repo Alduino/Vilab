@@ -35,6 +35,10 @@ export function getMediaListeners(props: MediaProps, ref: MutableRefObject<HTMLM
             if (ref.current === null) return;
             if (props.onVolumeChange && !props.onVolumeChange(ref.current.volume) !== false) event.preventDefault();
         },
+        loadedmetadata: event => {
+            if (ref.current ===  null) return;
+            if (props.onDurationLoaded) props.onDurationLoaded(ref.current.duration);
+        },
         progress: event => {
             if (ref.current === null) return;
 
@@ -61,10 +65,16 @@ export function addMediaListeners(props: MediaProps, ref: MutableRefObject<HTMLM
         for (const listener in listeners) {
             if (!listeners.hasOwnProperty(listener)) continue;
 
-            ref.current.addEventListener(listener, listeners[listener]);
+            // special case for loadedmetadata as it doesn't seem to trigger multiple handlers
+            if (listener === "loadedmetadata") {
+                ref.current.addEventListener(listener, e => {
+                    metadataLoaded();
+                    listeners[listener](e);
+                });
+            } else {
+                ref.current.addEventListener(listener, listeners[listener]);
+            }
         }
-
-        ref.current.addEventListener("loadedmetadata", metadataLoaded);
 
         return () => {
             // make typescript happy
