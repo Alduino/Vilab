@@ -64,4 +64,10 @@ export default interface MediaProps {
      * @param amounts - List of load sections, each between 0 and 1
      */
     onDataLoaded?: (amounts: DataLoadSection[]) => void;
+
+    /**
+     * Triggered when metadata has loaded
+     * @param duration - The duration of the media in seconds
+     */
+    onDurationLoaded?: (duration: number) => void;
 }
