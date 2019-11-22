@@ -1,14 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using MongoDB.Bson;
 using Xilab.VilabBackend.Models;
 
 namespace Xilab.VilabBackend.Controllers
@@ -21,11 +20,11 @@ namespace Xilab.VilabBackend.Controllers
             [JsonPropertyName("video")] public Video Video { get; set; }
             [JsonPropertyName("uploadUrl")] public string Url => $"/api/video/{Video.Id}/content";
         }
+
+        private static readonly List<UploadItem> UploadItems = new List<UploadItem>();
         
         private readonly ILogger<VideoController> _logger;
         private readonly IDatabaseService _db;
-
-        private readonly List<UploadItem> _uploadItems = new List<UploadItem>();
 
         private string ComputeHash(int id)
         {
@@ -43,10 +42,10 @@ namespace Xilab.VilabBackend.Controllers
 
         [HttpGet]
         [Route("api/[controller]/{id}")]
-        public async Task<Video> Get(uint id)
+        public async Task<Video> Get(string id)
         {
             _logger.LogDebug("Get video from database");
-            var video = await Video.GetVideo(_db.Database, id);
+            var video = await Video.GetVideo(_db.Database, ObjectId.Parse(id));
             _logger.LogDebug($"Video is {video.Title}");
 
             return video;
@@ -54,25 +53,27 @@ namespace Xilab.VilabBackend.Controllers
 
         [HttpPost]
         [Route("api/[controller]")]
-        public async Task<UploadItem> Post([FromBody] Video video)
+        public UploadItem Post([FromBody] Video video)
         {
+            video.Id = ObjectId.GenerateNewId();
             var uploadItem = new UploadItem
             {
                 Video = video
             };
-            _uploadItems.Add(uploadItem);
+            
+            UploadItems.Add(uploadItem);
+            
             return uploadItem;
         }
 
         [HttpPost]
         [Route("api/[controller]/{id}/content")]
-        public async Task UploadPost(uint id)
+        public async Task UploadPost(string id)
         {
-            var item = _uploadItems.First(el => el.Video.Id == id);
-            _uploadItems.Remove(item);
+            var item = UploadItems.First(el => el.Video.IdString == id);
+            UploadItems.Remove(item);
             using var reader = new StreamReader(Request.Body);
             var body = await reader.ReadToEndAsync();
-            Console.WriteLine(body);
         }
     }
 }
