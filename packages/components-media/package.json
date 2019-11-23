@@ -17,7 +17,6 @@
     "@xilab/components-form": "^0.1.0",
     "@xilab/themes": "^0.1.0",
     "classnames": "^2.2.6",
-    "date-fns": "^2.8.0",
     "react": "^16.9.0",
     "rimraf": "^3.0.0",
     "styled-components": "^4.4.0",
