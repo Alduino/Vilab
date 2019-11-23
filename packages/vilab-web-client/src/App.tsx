@@ -2,15 +2,23 @@ import React, {FC} from 'react';
 import {VideoPlayer} from "@xilab/components-media";
 import {ThemeProvider} from "styled-components";
 import {Default} from "@xilab/themes";
+import {Switch, Route} from 'react-router-dom';
+import {WatchPage} from "./page/WatchPage";
+import {UploadPage} from "./page/UploadPage";
 
 console.log("default theme is", Default);
 
 const App: FC = () => {
     return (
         <ThemeProvider theme={Default}>
-            <VideoPlayer width={720} height={405}>
-                <source src="http://dl5.webmfiles.org/big-buck-bunny_trailer.webm" />
-            </VideoPlayer>
+            <Switch>
+                <Route path="/watch/:id">
+                    <WatchPage />
+                </Route>
+                <Route path="/upload">
+                    <UploadPage />
+                </Route>
+            </Switch>
         </ThemeProvider>
     )
 };
