@@ -27,6 +27,13 @@ namespace Xilab.VilabBackend
         {
             services.AddSingleton<IDatabaseService, MongoDatabaseService>();
             services.AddControllers();
+            services.AddCors(options =>
+            {
+                options.AddPolicy("any-origin", builder =>
+                {
+                    builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+                });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -42,6 +49,8 @@ namespace Xilab.VilabBackend
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseCors("any-origin");
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
