@@ -43,19 +43,20 @@ namespace Xilab.VilabBackend.Ffmpeg
             Info = new MediaInfo
             {
                 Path = Path,
+                Frames = int.Parse(videoStream.FrameCount),
                 Size = (videoStream.Width, videoStream.Height),
                 AspectRatio = aspectRatio
             };
         }
 
-        public Task Resize(MediaInfo to) => _engine.LaunchFfmpeg(Path, to.Path, new IFfmpegArg[]
+        public Task Resize(MediaInfo to, Action<int> progress) => _engine.LaunchFfmpeg(Path, to.Path, new IFfmpegArg[]
         {
             new SizeArg {Width = to.Size.width, Height = to.Size.height}
-        });
+        }, progress);
 
-        public Task ResizeHeight(MediaInfo to) => _engine.LaunchFfmpeg(Path, to.Path, new IFfmpegArg[]
+        public Task ResizeHeight(MediaInfo to, Action<int> progress) => _engine.LaunchFfmpeg(Path, to.Path, new IFfmpegArg[]
         {
             new HeightArg {Height = to.Size.height}
-        });
+        }, progress);
     }
 }

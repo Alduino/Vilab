@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MongoDB.Bson;
@@ -103,16 +105,26 @@ namespace Xilab.VilabBackend.Controllers
                 inputFile.Info.CalculateSizeFromRatio(720),
                 inputFile.Info.CalculateSizeFromRatio(1080)
             };
-            
-            foreach (var resolution in resolutions)
+
+            for (var i = 0; i < resolutions.Length; i++)
             {
+                var resolution = resolutions[i];
+                
                 var outputFile = new MediaInfo
                 {
                     Path = GenerateVideoPath(id, resolution.height) + ".mp4",
                     Size = resolution
                 };
 
-                await inputFile.ResizeHeight(outputFile);
+                await inputFile.ResizeHeight(outputFile, async frame =>
+                {
+                    var percentageComplete = (i + (float) frame / inputFile.Info.Frames) / resolutions.Length;
+                    Console.WriteLine("Progress: {0}", percentageComplete);
+                    var dataBuff =
+                        Encoding.UTF8.GetBytes(percentageComplete.ToString(CultureInfo.InvariantCulture) + "\n");
+                    await Response.Body.WriteAsync(dataBuff);
+                    await Response.Body.FlushAsync();
+                });
             }
 
             System.IO.File.Delete(inputPath);

@@ -3,6 +3,7 @@
     public struct MediaInfo
     {
         public string Path;
+        public int Frames;
         public (int width, int height) Size;
         public (int width, int height) AspectRatio;
 

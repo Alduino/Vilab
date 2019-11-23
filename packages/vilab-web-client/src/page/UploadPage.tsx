@@ -1,5 +1,6 @@
 import React, {FC, useCallback, useRef, useState} from "react";
 import styled from "styled-components";
+import lineIterator from "../lineIterator";
 
 const Header = styled.h1`
     font: ${props => props.theme.font.header};
@@ -27,10 +28,14 @@ export const UploadPage: FC = props => {
 
         // send the file to uploadUrl
         console.log("upload video");
-        await fetch(new Request("https://localhost:5001" + uploadUrl, {
+        const response = await fetch(new Request("https://localhost:5001" + uploadUrl, {
             method: "POST",
             body: file.current.files[0]
         }));
+        for await (const line of lineIterator(response)) {
+            const progress = parseFloat(line);
+            console.log(progress);
+        }
         console.log("done");
 
     }, [title, description]);
