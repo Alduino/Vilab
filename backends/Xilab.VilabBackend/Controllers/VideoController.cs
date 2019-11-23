@@ -1,16 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
-using MediaToolkit;
-using MediaToolkit.Model;
-using MediaToolkit.Options;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MongoDB.Bson;
+using Xilab.VilabBackend.Ffmpeg;
 using Xilab.VilabBackend.Models;
 
 namespace Xilab.VilabBackend.Controllers
@@ -26,10 +25,12 @@ namespace Xilab.VilabBackend.Controllers
 
         private static readonly List<UploadItem> UploadItems = new List<UploadItem>();
 
-        public static string GenerateVideoPath(string id) => $"Uploads/{id}";
+        public static string GenerateVideoPath(string id) => Path.GetFullPath($"Uploads/{id}");
+
+        public static string GenerateVideoDir(string id) => $"{GenerateVideoPath(id)}_res";
         
         public static string GenerateVideoPath(string id, int resolution) =>
-            $"{GenerateVideoPath(id)}_res/{resolution}";
+            $"{GenerateVideoDir(id)}/{resolution}";
         
         private readonly ILogger<VideoController> _logger;
         private readonly IDatabaseService _db;
@@ -41,7 +42,7 @@ namespace Xilab.VilabBackend.Controllers
             var hash = crypto.ComputeHash(source);
             return string.Join("", hash.Select(el => el.ToString("x2")));
         }
-
+        
         public VideoController(ILogger<VideoController> logger, IDatabaseService db)
         {
             _logger = logger;
@@ -76,6 +77,7 @@ namespace Xilab.VilabBackend.Controllers
 
         [HttpPost]
         [Route("api/[controller]/{id}/content")]
+        [RequestSizeLimit(3_000_000_000)] // 3gb
         public async Task UploadPost(string id)
         {
             var item = UploadItems.First(el => el.Video.IdString == id);
@@ -83,31 +85,37 @@ namespace Xilab.VilabBackend.Controllers
             
             // write stream to a file so we can use it with ffmpeg
             var inputPath = GenerateVideoPath(id);
-            await using var fileStream = System.IO.File.Create(inputPath);
-            await Request.Body.CopyToAsync(fileStream);
-
-            // TODO find this out some other way
-            using var engine = new Engine(@"C:\Program Files (x86)\Ffmpeg for Audacity\ffmpeg.exe");
-            var inputFile = new MediaFile {Filename = inputPath};
-
-            var resolutions = new Dictionary<int, VideoSize>
+            await using (var fileStream = System.IO.File.Create(inputPath))
             {
-                {480, VideoSize.Hd480},
-                {720, VideoSize.Hd720},
-                {1080, VideoSize.Hd1080}
+                await Request.Body.CopyToAsync(fileStream);
+            }
+
+            Directory.CreateDirectory(GenerateVideoDir(id));
+
+            var engine = new FfmpegEngine("bin/ffmpeg");
+            
+            var inputFile = await engine.GetMedia(inputPath);
+
+            var resolutions = new[]
+            {
+                inputFile.Info.CalculateSizeFromRatio(360),
+                inputFile.Info.CalculateSizeFromRatio(480),
+                inputFile.Info.CalculateSizeFromRatio(720),
+                inputFile.Info.CalculateSizeFromRatio(1080)
             };
             
-            foreach (var (resolution, videoSize) in resolutions)
+            foreach (var resolution in resolutions)
             {
-                var outputFile = new MediaFile {Filename = GenerateVideoPath(id, resolution) + ".mp4"};
-                _logger.LogDebug($"Generating video at {outputFile.Filename}");
-                var options = new ConversionOptions
+                var outputFile = new MediaInfo
                 {
-                    VideoSize = videoSize
+                    Path = GenerateVideoPath(id, resolution.height) + ".mp4",
+                    Size = resolution
                 };
-                engine.Convert(inputFile, outputFile, options);
-                _logger.LogInformation($"Done generating {resolution}p video file");
+
+                await inputFile.ResizeHeight(outputFile);
             }
+
+            System.IO.File.Delete(inputPath);
         }
     }
 }
