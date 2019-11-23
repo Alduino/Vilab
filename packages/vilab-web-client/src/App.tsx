@@ -1,5 +1,4 @@
 import React, {FC} from 'react';
-import {VideoPlayer} from "@xilab/components-media";
 import {ThemeProvider} from "styled-components";
 import {Default} from "@xilab/themes";
 import {Switch, Route, BrowserRouter} from 'react-router-dom';
