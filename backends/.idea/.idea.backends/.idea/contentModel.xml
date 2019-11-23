@@ -16,6 +16,21 @@
         <e p="Controllers" t="Include">
           <e p="VideoController.cs" t="Include" />
         </e>
+        <e p="Ffmpeg" t="Include">
+          <e p="FfmpegEngine.cs" t="Include" />
+          <e p="FfprobeFormat.cs" t="Include" />
+          <e p="FfprobeFormatTags.cs" t="Include" />
+          <e p="FfprobeResult.cs" t="Include" />
+          <e p="FfprobeStream.cs" t="Include" />
+          <e p="FfprobeStreamDisposition.cs" t="Include" />
+          <e p="FfprobeStreamTags.cs" t="Include" />
+          <e p="HeightArg.cs" t="Include" />
+          <e p="IFfmpegArg.cs" t="Include" />
+          <e p="Media.cs" t="Include" />
+          <e p="MediaInfo.cs" t="Include" />
+          <e p="SizeArg.cs" t="Include" />
+          <e p="Util.cs" t="Include" />
+        </e>
         <e p="Models" t="Include">
           <e p="Video.cs" t="Include" />
         </e>
