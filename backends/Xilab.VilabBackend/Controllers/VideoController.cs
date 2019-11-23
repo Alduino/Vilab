@@ -5,6 +5,9 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using MediaToolkit;
+using MediaToolkit.Model;
+using MediaToolkit.Options;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MongoDB.Bson;
@@ -22,6 +25,11 @@ namespace Xilab.VilabBackend.Controllers
         }
 
         private static readonly List<UploadItem> UploadItems = new List<UploadItem>();
+
+        public static string GenerateVideoPath(string id) => $"Uploads/{id}";
+        
+        public static string GenerateVideoPath(string id, int resolution) =>
+            $"{GenerateVideoPath(id)}_res/{resolution}";
         
         private readonly ILogger<VideoController> _logger;
         private readonly IDatabaseService _db;
@@ -72,8 +80,34 @@ namespace Xilab.VilabBackend.Controllers
         {
             var item = UploadItems.First(el => el.Video.IdString == id);
             UploadItems.Remove(item);
-            using var reader = new StreamReader(Request.Body);
-            var body = await reader.ReadToEndAsync();
+            
+            // write stream to a file so we can use it with ffmpeg
+            var inputPath = GenerateVideoPath(id);
+            await using var fileStream = System.IO.File.Create(inputPath);
+            await Request.Body.CopyToAsync(fileStream);
+
+            // TODO find this out some other way
+            using var engine = new Engine(@"C:\Program Files (x86)\Ffmpeg for Audacity\ffmpeg.exe");
+            var inputFile = new MediaFile {Filename = inputPath};
+
+            var resolutions = new Dictionary<int, VideoSize>
+            {
+                {480, VideoSize.Hd480},
+                {720, VideoSize.Hd720},
+                {1080, VideoSize.Hd1080}
+            };
+            
+            foreach (var (resolution, videoSize) in resolutions)
+            {
+                var outputFile = new MediaFile {Filename = GenerateVideoPath(id, resolution) + ".mp4"};
+                _logger.LogDebug($"Generating video at {outputFile.Filename}");
+                var options = new ConversionOptions
+                {
+                    VideoSize = videoSize
+                };
+                engine.Convert(inputFile, outputFile, options);
+                _logger.LogInformation($"Done generating {resolution}p video file");
+            }
         }
     }
 }
