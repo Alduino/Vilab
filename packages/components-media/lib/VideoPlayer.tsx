@@ -9,9 +9,6 @@ import {DataLoadSection} from "./MediaProps";
 import {Pause, Play} from "styled-icons/boxicons-regular";
 
 export interface VideoPlayerProps {
-    width: CssValue;
-    height: CssValue;
-
     //onPlay?: CancellableEventHandler;
     //onPause?: CancellableEventHandler;
 
@@ -46,10 +43,7 @@ const Progress = styled(SeekBar)`
     background: ${props => props.theme.shade.light.withAlpha(.7)};
 `;
 
-const Overlay = styled.div<VideoOverlayProps>`
-    width: ${props => sizeToString(props.width)};
-    height: ${props => sizeToString(props.height)};
-    
+const Overlay = styled.div`
     display: grid;
     grid-template-rows: 1fr auto auto;
     grid-template-columns: 1fr auto 1fr;
@@ -91,7 +85,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = props => {
     const [duration, setDuration] = useState(0);
 
     return (
-        <Overlay width={props.width} height={props.height}>
+        <Overlay>
             <StyledVideo time={videoOverrideTime}
                          volume={getRealVolume(volume)}
                          playing={isPlaying}
