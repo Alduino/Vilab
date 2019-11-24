@@ -9,6 +9,8 @@ import {DataLoadSection} from "./MediaProps";
 import {Pause, Play} from "styled-icons/boxicons-regular";
 
 export interface VideoPlayerProps {
+    className?: string;
+
     //onPlay?: CancellableEventHandler;
     //onPause?: CancellableEventHandler;
 
@@ -85,7 +87,7 @@ export const VideoPlayer: FC<VideoPlayerProps> = props => {
     const [duration, setDuration] = useState(0);
 
     return (
-        <Overlay>
+        <Overlay className={props.className}>
             <StyledVideo time={videoOverrideTime}
                          volume={getRealVolume(volume)}
                          playing={isPlaying}
