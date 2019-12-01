@@ -22,7 +22,7 @@ namespace Xilab.VilabBackend.Controllers
         public struct UploadItem
         {
             [JsonPropertyName("video")] public Video Video { get; set; }
-            [JsonPropertyName("uploadUrl")] public string Url => $"/api/video/{Video.Id}/content";
+            [JsonPropertyName("content")] public string Url => $"/api/video/{Video.Id}/content";
         }
 
         private static readonly List<UploadItem> UploadItems = new List<UploadItem>();
@@ -77,6 +77,15 @@ namespace Xilab.VilabBackend.Controllers
             return uploadItem;
         }
 
+        [HttpGet]
+        [Route("api/[controller]/{id}/content/{resolution}")]
+        public async Task ContentGet(string id, int resolution)
+        {
+            var file = GenerateVideoPath(id, resolution) + ".mp4";
+            await using var stream = System.IO.File.OpenRead(file);
+            await stream.CopyToAsync(Response.Body);
+        }
+
         [HttpPost]
         [Route("api/[controller]/{id}/content")]
         [RequestSizeLimit(3_000_000_000)] // 3gb
@@ -128,6 +137,11 @@ namespace Xilab.VilabBackend.Controllers
             }
 
             System.IO.File.Delete(inputPath);
+            
+            item.Video.UploadDate = DateTime.Now;
+
+            // insert into database
+            await Video.GetCollection(_db.Database).InsertOneAsync(item.Video);
         }
     }
 }
