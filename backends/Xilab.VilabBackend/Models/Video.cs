@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using System;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -17,5 +18,6 @@ namespace Xilab.VilabBackend.Models
         [JsonPropertyName("id")] public string IdString => Id.ToString();
         [JsonPropertyName("title")] public string Title { get; set; }
         [JsonPropertyName("description")] public string Description { get; set; }
+        [JsonPropertyName("date")] public DateTime UploadDate { get; set; }
     }
 }
