@@ -1,6 +1,7 @@
 import React, {FC, useCallback, useRef, useState} from "react";
 import styled from "styled-components";
 import lineIterator from "../lineIterator";
+import {Link} from "react-router-dom";
 
 const Header = styled.h1`
     font: ${props => props.theme.font.header};
@@ -11,13 +12,15 @@ export const UploadPage: FC = props => {
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
     const file = useRef<HTMLInputElement>(null);
+    const [progress, setProgress] = useState(0);
+    const [contentUrl, setContentUrl] = useState("#");
 
     const upload = useCallback(async () => {
         if (file.current === null) return;
         if (file.current.files === null) return;
 
         console.log("init video");
-        const {video, uploadUrl}: {video: string, uploadUrl: string} =
+        const {video, content: contentUrl}: {video: string, content: string} =
             await fetch(new Request("https://localhost:5001/api/video", {
                 method: "POST",
                 body: JSON.stringify({title, description}),
@@ -26,14 +29,17 @@ export const UploadPage: FC = props => {
                 }
             })).then(res => res.json());
 
+        setContentUrl(contentUrl);
+
         // send the file to uploadUrl
         console.log("upload video");
-        const response = await fetch(new Request("https://localhost:5001" + uploadUrl, {
+        const response = await fetch(new Request("https://localhost:5001" + contentUrl, {
             method: "POST",
             body: file.current.files[0]
         }));
         for await (const line of lineIterator(response)) {
             const progress = parseFloat(line);
+            setProgress(progress);
             console.log(progress);
         }
         console.log("done");
@@ -48,6 +54,8 @@ export const UploadPage: FC = props => {
             <textarea value={description} onChange={e => setDescription(e.target.value)} placeholder="Description" />
             <input type="file" ref={file} />
             <button onClick={upload}>Upload</button>
+            <p>Progress: {progress}</p>
+            <Link to={contentUrl + "/1080"}>Watch</Link>
         </>
     );
 };
