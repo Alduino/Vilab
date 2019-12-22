@@ -5,6 +5,7 @@
     "lerna": "^3.16.4"
   },
   "scripts": {
+    "install": "lerna bootstrap --hoist",
     "build": "lerna run build --stream",
     "start": "lerna run start --parallel"
   }
