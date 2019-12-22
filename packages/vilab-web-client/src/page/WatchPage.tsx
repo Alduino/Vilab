@@ -1,5 +1,6 @@
 import React, {FC, useEffect, useState} from "react";
 import {VideoPlayer} from "@xilab/components-media";
+import {Values} from "@xilab/themes";
 import styled from "styled-components";
 import {useParams} from "react-router-dom";
 
@@ -27,6 +28,16 @@ const Header = styled.h1`
     
     grid-column: 1;
     grid-row: 1;
+    
+    &::after {
+        content: attr(data-date);
+        font-size: .8em;
+        color: ${props => props.theme.shade.grey(Values.mid)};
+        font-weight: 300;
+        
+        display: inline-block;
+        margin-left: 2rem;
+    }
 `;
 
 const Video = styled(VideoPlayer)`
@@ -38,7 +49,8 @@ const Description = styled.div`
     grid-area: 3 / 1 / 4 / 2;
     
     font: ${props => props.theme.font.body};
-    
+    line-height: 1.3;
+    font-weight: 300;
 `;
 
 // TODO make comments component
@@ -66,7 +78,7 @@ export const WatchPage: FC = props => {
 
     return (
         <Container>
-            <Header>{title}</Header>
+            <Header data-date="4/04/00">{title}</Header>
             <Video>
                 <source src={videoPath} />
             </Video>

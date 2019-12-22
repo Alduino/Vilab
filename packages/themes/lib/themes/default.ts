@@ -15,7 +15,7 @@ export const theme: ITheme = {
     },
 
     font: {
-        header: new ThemeFont("Segoe UI"),
-        body: new ThemeFont("Segoe UI")
+        header: new ThemeFont("soleil", "'Segoe UI', Helvetica, Arial"),
+        body: new ThemeFont("soleil", "'Segoe UI', Helvetica, Arial")
     }
 };
