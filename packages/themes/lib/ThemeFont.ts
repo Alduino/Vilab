@@ -11,6 +11,6 @@ export default class ThemeFont {
     }
 
     public toString() {
-        return `1em/${this.lineHeight} "${name}", ${this.secondaries}`;
+        return `1em/${this.lineHeight} "${this.name}", ${this.secondaries}`;
     }
 }
